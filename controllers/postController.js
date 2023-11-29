@@ -106,6 +106,32 @@ const getAllPosts = async (req, res) => {
   }
 };
 
+const updatePost = async (req, res) => {
+  const values = req.body;
+  const { postId } = req.params;
+
+  const currentUser = req.user;
+  if (!currentUser) return res.status(401).json({ message: "Login to update" });
+
+  const post = await Post.findById({ _id: postId });
+
+  if (!post) return res.status(404).json({ message: "Post not found" });
+
+  if (currentUser._id.toString() !== post.postedBy.toString())
+    return res.status(401).json({ message: "You can only update your posts" });
+
+  const updatedPost = await Post.findByIdAndUpdate(
+    {
+      _id: postId,
+    },
+    { $set: values },
+    {
+      new: true,
+    }
+  );
+  res.status(200).json({ message: "Post updated successfully", updatedPost });
+};
+
 const addComment = async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -137,6 +163,7 @@ const addComment = async (req, res) => {
 
 export {
   createPost,
+  updatePost,
   deletePost,
   getPostsByUserId,
   getPostById,
