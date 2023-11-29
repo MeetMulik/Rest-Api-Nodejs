@@ -72,7 +72,7 @@ npm run dev
 
 All post-related routes are prefixed with `/api/users`.
 
-#### 1. Signup
+### 1. Signup
 
 - **Method:** POST
 - **Endpoint:** `/signup`
@@ -96,7 +96,7 @@ All post-related routes are prefixed with `/api/users`.
   }
   ```
 
-#### 2. Login
+### 2. Login
 
 - **Method:** POST
 - **Endpoint:** `/login`
