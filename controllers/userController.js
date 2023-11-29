@@ -196,6 +196,45 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+const updateUserProfile = async (req, res) => {
+  try {
+    const values = req.body;
+    const currentUserId = req.user._id;
+
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (req.params.id != currentUserId.toString()) {
+      return res
+        .status(400)
+        .json({ message: "You cannot update other user's profile" });
+    }
+
+    if (values.password) {
+      const { password } = values;
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const updatedUser = await User.findByIdAndUpdate(
+        { _id: req.params.id },
+        { $set: { password: hashedPassword } },
+        { new: true }
+      );
+      return res.status(200).json(updatedUser);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: values },
+      { new: true }
+    );
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log("[UPDATE USER PROFILE ERROR]", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   signupUser,
   loginUser,
@@ -203,4 +242,5 @@ export {
   forgetPassword,
   resetPassword,
   getUserProfile,
+  updateUserProfile,
 };
