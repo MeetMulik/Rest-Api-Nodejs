@@ -180,4 +180,27 @@ const resetPassword = async (req, res) => {
   } catch (error) {}
 };
 
-export { signupUser, loginUser, logoutUser, forgetPassword, resetPassword };
+const getUserProfile = async (req, res) => {
+  const username = req.params.username;
+  try {
+    let user = await User.findOne({ username })
+      .select("-password")
+      .select("-resetToken")
+      .select("-updatedAt");
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.status(200).json(user);
+  } catch (error) {
+    console.log("[GET USER PROFILE ERROR]", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export {
+  signupUser,
+  loginUser,
+  logoutUser,
+  forgetPassword,
+  resetPassword,
+  getUserProfile,
+};
