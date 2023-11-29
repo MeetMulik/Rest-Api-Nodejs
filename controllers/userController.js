@@ -51,6 +51,11 @@ const sendResetPasswordEmail = async (name, email, resetToken) => {
   }
 };
 
+/**
+ * @desc   Register a new user
+ * @route  POST /api/users/signup
+ * @access Public
+ */
 const signupUser = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
@@ -90,6 +95,11 @@ const signupUser = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Log in an existing user
+ * @route  POST /api/users/login
+ * @access Public
+ */
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -121,6 +131,11 @@ const loginUser = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Log out the currently authenticated user
+ * @route  POST /api/users/logout
+ * @access Public
+ */
 const logoutUser = async (req, res) => {
   try {
     res.clearCookie("jwt", "", { maxAge: 1 });
@@ -131,6 +146,11 @@ const logoutUser = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Request a password reset for a user
+ * @route  POST /api/users/forget-password
+ * @access Public
+ */
 const forgetPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -154,6 +174,11 @@ const forgetPassword = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Reset the password for a user
+ * @route  POST /api/users/reset-password
+ * @access Public
+ */
 const resetPassword = async (req, res) => {
   try {
     const resetToken = req.query.resetToken;
@@ -180,6 +205,11 @@ const resetPassword = async (req, res) => {
   } catch (error) {}
 };
 
+/**
+ * @desc   Get the profile of a user by username
+ * @route  GET /api/users/profile/:username
+ * @access Public
+ */
 const getUserProfile = async (req, res) => {
   const username = req.params.username;
   try {
@@ -196,6 +226,11 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Update the profile of the currently authenticated user
+ * @route  PATCH /api/users/profile/:id
+ * @access Private
+ */
 const updateUserProfile = async (req, res) => {
   try {
     const values = req.body;

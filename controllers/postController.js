@@ -1,6 +1,11 @@
 import Post from "../models/postModel.js";
 import User from "../models/userModel.js";
 
+/**
+ * @desc   Create a new post
+ * @route  POST /api/posts/create
+ * @access Private
+ */
 const createPost = async (req, res) => {
   try {
     const currentUser = req.user;
@@ -29,6 +34,11 @@ const createPost = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Delete a post by post ID
+ * @route  DELETE /api/posts/:postId
+ * @access Private
+ */
 const deletePost = async (req, res) => {
   try {
     const currentUser = req.user;
@@ -52,6 +62,11 @@ const deletePost = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Get posts by user ID
+ * @route  GET /api/posts/user/:userId
+ * @access Private
+ */
 const getPostsByUserId = async (req, res) => {
   try {
     const currentUser = req.user;
@@ -76,6 +91,11 @@ const getPostsByUserId = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Get a post by post ID
+ * @route  GET /api/posts/:postId
+ * @access Public
+ */
 const getPostById = async (req, res) => {
   try {
     const { postId } = req.params;
@@ -93,6 +113,11 @@ const getPostById = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Get all posts
+ * @route  GET /api/posts
+ * @access Public
+ */
 const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find({})
@@ -106,6 +131,11 @@ const getAllPosts = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Update a post by post ID
+ * @route  PATCH /api/posts/update/:postId
+ * @access Private
+ */
 const updatePost = async (req, res) => {
   const values = req.body;
   const { postId } = req.params;
@@ -132,6 +162,11 @@ const updatePost = async (req, res) => {
   res.status(200).json({ message: "Post updated successfully", updatedPost });
 };
 
+/**
+ * @desc   Add a comment to a post
+ * @route  POST /api/posts/comment/:postId
+ * @access Private
+ */
 const addComment = async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -161,6 +196,11 @@ const addComment = async (req, res) => {
   }
 };
 
+/**
+ * @desc   Delete a comment by comment ID in a post
+ * @route  DELETE /api/posts/:postId/comment/:commentId
+ * @access Private
+ */
 const deleteComment = async (req, res) => {
   try {
     const postId = req.params.postId;
