@@ -9,6 +9,7 @@ import {
   getPostById,
   getAllPosts,
   addComment,
+  deleteComment,
 } from "../controllers/postController.js";
 
 const router = express.Router();
@@ -20,5 +21,6 @@ router.post("/create", protectRoute, createPost);
 router.post("/comment/:postId", protectRoute, addComment);
 router.patch("/update/:postId", protectRoute, updatePost);
 router.delete("/:postId", protectRoute, deletePost);
+router.delete("/:postId/comment/:commentId", protectRoute, deleteComment);
 
 export default router;

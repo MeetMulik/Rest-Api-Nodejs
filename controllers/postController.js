@@ -161,6 +161,41 @@ const addComment = async (req, res) => {
   }
 };
 
+const deleteComment = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+
+    if (!req.user) return res.status(401).json({ message: "Login to comment" });
+
+    const post = await Post.findById({ _id: postId });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const comment = post.comments.find(
+      (comment) => comment._id.toString() === commentId.toString()
+    );
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    if (comment.userId.toString() !== req.user._id.toString())
+      return res
+        .status(401)
+        .json({ message: "Unauthorized to delete comment" });
+
+    const index = post.comments.indexOf(comment);
+    post.comments.splice(index, 1);
+    await post.save();
+
+    res.status(200).json(post);
+  } catch (error) {
+    console.log("[DELETE COMMENT ERROR]", error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   createPost,
   updatePost,
@@ -169,4 +204,5 @@ export {
   getPostById,
   getAllPosts,
   addComment,
+  deleteComment,
 };
