@@ -93,4 +93,53 @@ const getPostById = async (req, res) => {
   }
 };
 
-export { createPost, deletePost, getPostsByUserId, getPostById };
+const getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find({})
+      .populate("postedBy", "username profileImg")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ message: "All posts found", posts });
+  } catch (error) {
+    console.log("[GET ALL POSTS ERROR]", error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const addComment = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const { text } = req.body;
+
+    if (!req.user) return res.status(401).json({ message: "Login to comment" });
+
+    const userId = req.user._id;
+    const authorProfileImg = req.user.profilePic;
+    const authorUsername = req.user.username;
+
+    if (!text) {
+      return res.status(400).json({ error: "Text field is required" });
+    }
+    const post = await Post.findById({ _id: postId });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const comment = { userId, text, authorProfileImg, authorUsername };
+    post.comments.push(comment);
+    await post.save();
+    res.status(200).json(post);
+  } catch (error) {
+    console.log("[ADD COMMENT ERROR]", error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export {
+  createPost,
+  deletePost,
+  getPostsByUserId,
+  getPostById,
+  getAllPosts,
+  addComment,
+};
