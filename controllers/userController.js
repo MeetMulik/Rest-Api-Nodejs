@@ -41,4 +41,45 @@ const signupUser = async (req, res) => {
   }
 };
 
-export { signupUser };
+const loginUser = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      res.status(400).json({ message: "User not found" });
+      return;
+    }
+
+    const checkPassword = await bcrypt.compare(password, user?.password);
+
+    if (!checkPassword) {
+      res.status(400).json({ message: "Invalid credentials" });
+      return;
+    }
+
+    generateTokenAndSetCookie(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    console.log("[LOGIN USER ERROR]", error.message);
+  }
+};
+
+const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("jwt", "", { maxAge: 1 });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    console.log("[LOGOUT USER ERROR]", error.message);
+  }
+};
+
+export { signupUser, loginUser, logoutUser };
