@@ -52,4 +52,45 @@ const deletePost = async (req, res) => {
   }
 };
 
-export { createPost, deletePost };
+const getPostsByUserId = async (req, res) => {
+  try {
+    const currentUser = req.user;
+    if (!currentUser)
+      return res
+        .status(401)
+        .json({ message: "Login to view this users's posts" });
+
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const userPosts = await Post.find({ postedBy: userId })
+      .populate("postedBy", "username profileImg")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ message: "User posts found", userPosts });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    console.log("[GET POSTS BY USERNAME ERROR]", error.message);
+  }
+};
+
+const getPostById = async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await Post.findById(postId).populate(
+      "postedBy",
+      "username profileImg"
+    );
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    res.status(200).json({ message: "Post found", post });
+  } catch (error) {
+    console.log("[GET POST BY ID ERROR]", error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export { createPost, deletePost, getPostsByUserId, getPostById };
