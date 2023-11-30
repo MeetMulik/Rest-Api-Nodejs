@@ -229,7 +229,7 @@ const deleteComment = async (req, res) => {
     post.comments.splice(index, 1);
     await post.save();
 
-    res.status(200).json(post);
+    res.status(200).json({ message: "Comment deleted successfully" });
   } catch (error) {
     console.log("[DELETE COMMENT ERROR]", error.message);
     return res.status(500).json({ message: error.message });
