@@ -70,6 +70,10 @@ npm run dev
 
 ## API Endpoints
 
+### Swagger Docs
+
+To view the Swagger documentation for the API, navigate to [http://localhost:5000/api-docs/](http://localhost:5000/api-docs/) after starting the application.
+
 All post-related routes are prefixed with `/api/users`.
 
 ### 1. Signup
