@@ -25,6 +25,7 @@ A simple RESTful API built using Node.js, MongoDB, Express, and JWT for user aut
 - Create Posts - (Create, Read, Update, Delete) Posts
 - Add comments on posts
 - Delete comments
+- Swagger Documentation
 
 ## Prerequisites
 
